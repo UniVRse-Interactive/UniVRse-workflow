@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: UniVRse Workflow Guide
+    url: https://github.com/UniVRse-Interactive/UniVRse-workflow
+    about: Read AGENTS.md and README.md for the 8-stage Feature Request, Git Worktree, and PM Review workflow.

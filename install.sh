@@ -165,6 +165,10 @@ else
     mkdir -p "$DEST/.agents"
     cp -R "$SOURCE_DIR/.agents/." "$DEST/.agents/"
   fi
+  if [[ -d "$SOURCE_DIR/.github" ]]; then
+    mkdir -p "$DEST/.github"
+    cp -R "$SOURCE_DIR/.github/." "$DEST/.github/"
+  fi
 fi
 
 if [[ -f "$DEST/install.sh" ]]; then
@@ -187,22 +191,41 @@ if [[ ${#EXTRA_REPOS[@]} -gt 0 ]]; then
   done
 fi
 
-echo "-> Verifying worktrees/ .gitignore entries in nested git repositories..."
+echo "-> Verifying worktrees/ .gitignore entries and .github/ISSUE_TEMPLATE/ in nested git repositories..."
+TEMPLATE_SRC="$SOURCE_DIR/.github/ISSUE_TEMPLATE"
+if [[ ! -d "$TEMPLATE_SRC" && -d "$DEST/.github/ISSUE_TEMPLATE" ]]; then
+  TEMPLATE_SRC="$DEST/.github/ISSUE_TEMPLATE"
+fi
 UPDATED_REPOS=()
 for dir in "$DEST"/*/; do
   [[ -d "$dir" ]] || continue
   if [[ -d "${dir}.git" || -f "${dir}.git" ]]; then
     gi="${dir}.gitignore"
     touch "$gi"
+    repo_notes=()
     if ! grep -qxF "worktrees/" "$gi" 2>/dev/null; then
       if [[ -s "$gi" ]] && [[ -n "$(tail -c 1 "$gi")" ]]; then
         printf '\n' >> "$gi"
       fi
       printf 'worktrees/\n' >> "$gi"
-      UPDATED_REPOS+=("$(basename "$dir") (added worktrees/)")
+      repo_notes+=("added worktrees/")
     else
-      UPDATED_REPOS+=("$(basename "$dir") (already ignored)")
+      repo_notes+=("worktrees/ ignored")
     fi
+    if [[ -d "$TEMPLATE_SRC" ]]; then
+      mkdir -p "${dir}.github/ISSUE_TEMPLATE"
+      synced_tpl=false
+      for tpl in feature_request.yml config.yml; do
+        if [[ -f "$TEMPLATE_SRC/$tpl" ]]; then
+          cp -f "$TEMPLATE_SRC/$tpl" "${dir}.github/ISSUE_TEMPLATE/$tpl"
+          synced_tpl=true
+        fi
+      done
+      if [[ "$synced_tpl" == true ]]; then
+        repo_notes+=("synced .github/ISSUE_TEMPLATE/")
+      fi
+    fi
+    UPDATED_REPOS+=("$(basename "$dir") (${repo_notes[*]})")
   fi
 done
 
@@ -211,7 +234,10 @@ echo "============================================================"
 echo "UniVRse Workflow Installed Successfully"
 echo "============================================================"
 echo "Destination : $DEST"
-echo "Files       : AGENTS.md, README.md, install.sh, .gitignore, .mcp.json, .agents/"
+echo "Files       : AGENTS.md, README.md, install.sh, .gitignore, .mcp.json, .agents/, .github/"
+echo "Agents (10) : product-manager, software-architect, security-engineer, orchestrator,"
+echo "              backend-engineer, frontend-engineer, devops-engineer, qa-engineer,"
+echo "              auditor, taskboard-manager"
 echo "Symlinks    : CLAUDE.md -> AGENTS.md"
 echo "              GEMINI.md -> AGENTS.md"
 if [[ ${#UPDATED_REPOS[@]} -gt 0 ]]; then
@@ -223,4 +249,5 @@ echo ""
 echo "Next Steps:"
 echo "  1. Open \"$DEST\" in Claude Code, OpenAI Codex, or Google Antigravity."
 echo "  2. If working on UniVRse-2.0, copy .env.example -> .env in any new worktree (never commit .env)."
-echo "  3. Follow the 8-Stage GitHub Issue -> Worktree -> staging -> main workflow in AGENTS.md."
+echo "  3. Submit features under Milestone \"Feature Request\" (gh issue create --milestone \"Feature Request\")"
+echo "     and follow the 8-Stage PM Review -> Worktree -> staging -> main workflow in AGENTS.md."

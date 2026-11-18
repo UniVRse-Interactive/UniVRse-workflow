@@ -1,0 +1,99 @@
+name: "Feature Request"
+description: "Submit a new UniVRse feature under the Feature Request Milestone for PM review and Git Worktree implementation"
+title: "[FEAT]: "
+labels: ["type:feature", "status:pm-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **Milestone Reminder:** Assign this issue to the **`Feature Request`** Milestone (`--milestone "Feature Request"` in `gh issue create`, or via the Milestone selector in the sidebar).
+        >
+        > New features enter **`status:pm-review`** for `product-manager` triage before Tech Lead (`software-architect`) `Allowed Paths` decomposition and local Git Worktree implementation.
+
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: "Problem Statement & Business Value"
+      description: "Describe the problem, operational gap, or customer/team need and the expected business impact."
+      placeholder: |
+        What problem does this solve, who is affected, and what measurable business or operational value does it deliver?
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: "User Story"
+      description: "Follow the standard format: As a <role>, I want <capability>, so that <benefit>."
+      placeholder: "As a <role>, I want <capability>, so that <benefit>."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: "Gherkin Acceptance Criteria"
+      description: "Provide testable Given/When/Then scenarios covering Happy Path, Validation/Error Handling, and Boundary/Tenant Isolation & 60000000001 Smoke Lock."
+      placeholder: |
+        Scenario 1: Happy Path
+          Given ...
+          When ...
+          Then ...
+
+        Scenario 2: Validation / Error Handling
+          Given ...
+          When ...
+          Then ...
+
+        Scenario 3: Boundary / Tenant Isolation & 60000000001 Smoke Lock
+          Given test phone 60000000001 (production line 60187777876 strictly excluded)
+          When ...
+          Then ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: story_points
+    attributes:
+      label: "Modified Fibonacci Estimate (Story Points)"
+      description: "Estimate total effort. Any item estimated at 13 MUST be split into <= 8 point issues during PM Review."
+      options:
+        - "1"
+        - "2"
+        - "3"
+        - "5"
+        - "8"
+        - "13 (Must split <= 8 at PM Review)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_scope
+    attributes:
+      label: "Target Modules / Allowed Paths & Out of Scope"
+      description: "Specify the expected module boundaries, Allowed Paths for isolated Git Worktree development, and explicit Out of Scope items."
+      placeholder: |
+        Target Modules / Allowed Paths:
+        - ...
+
+        Out of Scope:
+        - ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pm_review_checklist
+    attributes:
+      label: "PM Review & Delivery Gate Checklist"
+      description: "Track compliance across Stage 1 (PM Review), Stage 2-6 (Worktree Dev & QA), and Stage 7 (Staging Acceptance)."
+      options:
+        - label: 'Assigned to Milestone: "Feature Request"'
+          required: false
+        - label: "PM Review Gate completed (Gherkin ACs & Story Points <= 8 verified)"
+          required: false
+        - label: "Stark 1 Lock Sync & Smoke Test Phone (60000000001) compliance verified"
+          required: false
+        - label: "Tech Lead Allowed Paths contract defined for local Git Worktree"
+          required: false
+        - label: "Stage 7 Staging CI + QA Verification + PM Staging Acceptance passed before Main merge"
+          required: false
