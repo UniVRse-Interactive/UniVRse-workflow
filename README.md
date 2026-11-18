@@ -1,10 +1,10 @@
-# UniVRse Workflow
+# UniVRse Engineering Delivery Workflow
 
-Unified cross-harness multi-agent engineering workflow for **Claude Code**, **OpenAI Codex**, and **Google Antigravity / Gemini CLI**.
+Single-workflow **End-to-End 8-Stage Delivery Pipeline** for **Claude Code** (`CLAUDE.md`), **OpenAI Codex** (`AGENTS.md`), and **Google Antigravity** (`GEMINI.md`).
 
-It enforces a closed-loop **8-Stage Delivery Pipeline**:
+![UniVRse End-to-End 8-Stage Delivery Pipeline](univrse-workflow-diagram.png)
 
-> **Feature Request Milestone & PM Review Gate** (`gh issue create --milestone "Feature Request"` / `status:pm-review` $\rightarrow$ `status:pm-approved`) $\rightarrow$ **Tech Lead Decomposition & Isolated Git Worktree** (`worktrees/<type>-issue-<num>-<slug>`) $\rightarrow$ **`.env` Parity & Local Self-Test** $\rightarrow$ **Independent `qa-engineer` Sign-Off** $\rightarrow$ **User Checkpoint #1: PR & Merge to `staging`** $\rightarrow$ **Staging CI + QA Verification (`60000000001` Smoke Lock) + PM Staging Acceptance (`[PM APPROVED FOR MAIN]`)** $\rightarrow$ **User Checkpoint #2: Merge `staging` $\rightarrow$ `main` (`master`), PM Release Closure & Cleanup**
+> **Stage 1: Intake & PM Review Gate** (`gh issue create --milestone "Feature Request"` / `status:pm-review` $\rightarrow$ `status:pm-approved`) $\rightarrow$ **Stage 2: Isolated Git Worktree** (`worktrees/<type>-issue-<num>-<slug>`) $\rightarrow$ **Stage 3: `.env` Parity & Docker Pre-Flight** $\rightarrow$ **Stage 4: Implementation & Local Self-Test** $\rightarrow$ **Stage 5: Independent QA Verification** $\rightarrow$ **Stage 6: User Checkpoint #1 (PR & Merge to `staging`)** $\rightarrow$ **Stage 7: Staging CI, QA Verify (`60000000001` Smoke Lock) & PM Staging Sign-Off (`[PM APPROVED FOR MAIN]`)** $\rightarrow$ **Stage 8: User Checkpoint #2 (Merge `staging` $\rightarrow$ `main`/`master`, Release Closure & Cleanup)**
 
 ---
 
@@ -12,32 +12,22 @@ It enforces a closed-loop **8-Stage Delivery Pipeline**:
 
 ```text
 <your-destination-folder>/
-├── AGENTS.md                   # Canonical cross-harness workflow & orchestration spec
-├── CLAUDE.md -> AGENTS.md      # Relative symlink for Claude Code
-├── GEMINI.md -> AGENTS.md      # Relative symlink for Google Antigravity / Gemini CLI
-├── README.md                   # Setup & usage guide
-├── install.sh                  # Portable workspace installer (local & remote bootstrap)
-├── .gitignore                  # Ignores nested repos (UniVRse-2.0/), worktrees/, and .env*
-├── .mcp.json                   # Unified workspace MCP servers (slack, supabase)
+├── AGENTS.md                       # Canonical cross-harness 8-Stage Delivery Pipeline spec
+├── CLAUDE.md -> AGENTS.md          # Relative symlink for Claude Code
+├── GEMINI.md -> AGENTS.md          # Relative symlink for Google Antigravity
+├── README.md                       # Setup & usage guide
+├── install.sh                      # Portable workspace installer (local & remote bootstrap)
+├── univrse-workflow-diagram.png    # Visual 8-Stage Delivery Pipeline diagram
+├── .gitignore                      # Ignores nested repos (UniVRse-2.0/), worktrees/, and .env*
+├── .mcp.json                       # Unified workspace MCP servers (slack, supabase)
 ├── .github/
 │   └── ISSUE_TEMPLATE/
-│       ├── config.yml          # Disables blank issues; links workflow guide
-│       └── feature_request.yml # Standardized Feature Request Issue Form (Milestone + PM Review)
+│       ├── config.yml              # Disables blank issues; links workflow guide
+│       └── feature_request.yml     # Standardized Feature Request Issue Form (Milestone + PM Review)
 ├── .agents/
-│   ├── mcp_config.json         # Agent MCP server config
-│   └── agents/                 # 10 specialist subagent profiles (Carbon/Argon/Hydrogen)
-│       ├── product-manager.md
-│       ├── software-architect.md
-│       ├── security-engineer.md
-│       ├── orchestrator.md
-│       ├── backend-engineer.md
-│       ├── frontend-engineer.md
-│       ├── devops-engineer.md
-│       ├── qa-engineer.md
-│       ├── auditor.md
-│       └── taskboard-manager.md
-└── UniVRse-2.0/                # (Optional via --with-repo) UniVRse-Interactive/UniVRse-OS.git
-    └── .github/ISSUE_TEMPLATE/ # Synced Feature Request Issue Form & config
+│   └── mcp_config.json             # Agent MCP server config
+└── UniVRse-2.0/                    # (Optional via --with-repo) UniVRse-Interactive/UniVRse-OS.git
+    └── .github/ISSUE_TEMPLATE/     # Synced Feature Request Issue Form & config
 ```
 
 ---
@@ -97,16 +87,18 @@ gh issue create \
   --body-file <structured-feature-body.md>
 ```
 
-### PM Review Gates (`product-manager`)
+### PM Review & Checkpoint Gates
 
 1. **Stage 1 — Intake & PM Review Gate (`status:pm-review` $\rightarrow$ `status:pm-approved`)**:
    - New feature issues enter with `type:feature` and `status:pm-review` under the **`Feature Request`** Milestone.
-   - `product-manager` (Gemini 4 Carbon) reviews business value, refines the User Story and Gherkin Acceptance Criteria (Happy Path, Validation/Error Handling, Boundary/Tenant Isolation & `60000000001` Smoke Lock), and verifies Modified Fibonacci Story Points (`<= 8`; `13`-point requests MUST be split before engineering starts).
-   - Once approved, `product-manager` swaps `status:pm-review` $\rightarrow$ `status:pm-approved` and hands off to `software-architect` (Tech Lead) to define `Allowed Paths` and open/prepare the local Git Worktree implementation.
-2. **Stage 7 — PM Staging Acceptance (`[PM APPROVED FOR MAIN]`)**:
-   - After PR merge to `staging`, Staging CI passes, and `qa-engineer` completes staging verification using test phone `60000000001`, `product-manager` validates all Gherkin ACs on Staging and posts **`[PM APPROVED FOR MAIN]`** before **User Checkpoint #2** (`staging` $\rightarrow$ `main`/`master`).
-3. **Stage 8 — PM Release Closure**:
-   - After `staging` merges into `main`/`master` and production deploy succeeds, `product-manager` verifies production release notes, confirms the `Feature Request` Milestone issue closes cleanly with a release summary comment, and ensures worktree/branch cleanup is recorded.
+   - PM reviews business value, refines the User Story and Gherkin Acceptance Criteria (Happy Path, Validation/Error Handling, Boundary/Tenant Isolation & `60000000001` Smoke Lock), and verifies Modified Fibonacci Story Points (`<= 8`; `13`-point requests MUST be split before engineering starts).
+   - Once approved, swap `status:pm-review` $\rightarrow$ `status:pm-approved` and proceed to **Stage 2 — Worktree** (`worktrees/<type>-issue-<num>-<slug>`).
+2. **Stage 6 — Staging PR Checkpoint (User Checkpoint #1)**:
+   - After `.env` parity, local implementation, self-tests, and independent QA sign-off pass, ask for explicit user approval before opening/merging the PR into `staging`.
+3. **Stage 7 — Staging Verify & PM Staging Sign-Off (`[PM APPROVED FOR MAIN]`)**:
+   - After PR merge to `staging`, Staging CI passes, and staging QA verification completes using test phone `60000000001`, PM validates all Gherkin ACs on Staging and posts **`[PM APPROVED FOR MAIN]`** before **User Checkpoint #2**.
+4. **Stage 8 — Main Release Checkpoint (User Checkpoint #2) & Release Closure**:
+   - Ask for explicit user approval before merging `staging` $\rightarrow$ `main`/`master`; once production deploy succeeds, record release notes, close the `Feature Request` Milestone issue with a release summary comment, and clean up the worktree/branch.
 
 ---
 

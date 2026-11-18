@@ -11,7 +11,7 @@ EXTRA_REPOS=()
 
 usage() {
   cat <<'EOF'
-UniVRse Workflow Installer (Claude Code + OpenAI Codex + Google Antigravity)
+UniVRse Engineering Delivery Workflow Installer (Claude Code + OpenAI Codex + Google Antigravity)
 
 Usage:
   install.sh [OPTIONS] [<destination-path>]
@@ -156,14 +156,16 @@ if [[ "$SOURCE_DIR" == "$DEST" ]]; then
   echo "-> Source and destination are identical ($DEST); skipping self-copy."
 else
   echo "-> Installing UniVRse workflow files into: $DEST"
-  for item in AGENTS.md README.md install.sh .gitignore .mcp.json; do
+  for item in AGENTS.md README.md install.sh .gitignore .mcp.json univrse-workflow-diagram.png; do
     if [[ -e "$SOURCE_DIR/$item" ]]; then
       cp -f "$SOURCE_DIR/$item" "$DEST/$item"
     fi
   done
   if [[ -d "$SOURCE_DIR/.agents" ]]; then
     mkdir -p "$DEST/.agents"
-    cp -R "$SOURCE_DIR/.agents/." "$DEST/.agents/"
+    if [[ -n "$(ls -A "$SOURCE_DIR/.agents" 2>/dev/null)" ]]; then
+      cp -R "$SOURCE_DIR/.agents/." "$DEST/.agents/"
+    fi
   fi
   if [[ -d "$SOURCE_DIR/.github" ]]; then
     mkdir -p "$DEST/.github"
@@ -231,13 +233,13 @@ done
 
 echo ""
 echo "============================================================"
-echo "UniVRse Workflow Installed Successfully"
+echo "UniVRse Engineering Delivery Workflow Installed Successfully"
 echo "============================================================"
 echo "Destination : $DEST"
-echo "Files       : AGENTS.md, README.md, install.sh, .gitignore, .mcp.json, .agents/, .github/"
-echo "Agents (10) : product-manager, software-architect, security-engineer, orchestrator,"
-echo "              backend-engineer, frontend-engineer, devops-engineer, qa-engineer,"
-echo "              auditor, taskboard-manager"
+echo "Files       : AGENTS.md, README.md, install.sh, .gitignore, .mcp.json, .agents/mcp_config.json, .github/"
+if [[ -f "$DEST/univrse-workflow-diagram.png" ]]; then
+  echo "Diagram     : univrse-workflow-diagram.png"
+fi
 echo "Symlinks    : CLAUDE.md -> AGENTS.md"
 echo "              GEMINI.md -> AGENTS.md"
 if [[ ${#UPDATED_REPOS[@]} -gt 0 ]]; then
@@ -250,4 +252,4 @@ echo "Next Steps:"
 echo "  1. Open \"$DEST\" in Claude Code, OpenAI Codex, or Google Antigravity."
 echo "  2. If working on UniVRse-2.0, copy .env.example -> .env in any new worktree (never commit .env)."
 echo "  3. Submit features under Milestone \"Feature Request\" (gh issue create --milestone \"Feature Request\")"
-echo "     and follow the 8-Stage PM Review -> Worktree -> staging -> main workflow in AGENTS.md."
+echo "     and follow the End-to-End 8-Stage Delivery Pipeline in AGENTS.md."
