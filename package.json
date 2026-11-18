@@ -1,0 +1,33 @@
+{
+  "name": "univrse-workflow",
+  "version": "1.0.0",
+  "description": "Interactive CLI installer for UniVRse OS Engineering Delivery Workflow — standardizes AGENTS.md for Claude Code, OpenAI Codex, and Antigravity CLI with role-based setup (Hezri, Asyraaf, Brendon).",
+  "type": "module",
+  "bin": {
+    "univrse-workflow": "./bin/cli.mjs",
+    "create-univrse-workflow": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "AGENTS.md",
+    "README.md",
+    "install.sh",
+    "univrse-workflow-diagram.png",
+    ".github/",
+    ".mcp.json",
+    ".agents/"
+  ],
+  "scripts": {
+    "start": "node ./bin/cli.mjs",
+    "setup": "node ./bin/cli.mjs",
+    "postinstall": "node ./bin/cli.mjs --postinstall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UniVRse-Interactive/UniVRse-workflow.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "ISC"
+}

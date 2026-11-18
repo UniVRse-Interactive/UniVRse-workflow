@@ -2,6 +2,10 @@
 UniVRse-2.0/
 worktrees/
 
+# NPM & CLI state
+node_modules/
+.univrse-workflow.json
+
 # Secrets & local env
 .env
 .env.*

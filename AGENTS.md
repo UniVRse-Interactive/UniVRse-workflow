@@ -1,16 +1,16 @@
 # UniVRse Workflow — Unified Cross-Harness Delivery Specification
 
-> **Canonical Source of Truth**: This file (`AGENTS.md`) is the single source of truth for **OpenAI Codex** (`AGENTS.md`), **Claude Code** (`CLAUDE.md -> AGENTS.md`), and **Google Antigravity / Gemini CLI** (`GEMINI.md -> AGENTS.md`) operating inside `/Users/brendonang/Desktop/UniVRse workflow`.
+> **Canonical Source of Truth**: This file (`AGENTS.md`) is the single-workflow specification for **all coding agents (`Claude Code`, `OpenAI Codex`, and `Antigravity CLI`)**, standardized directly inside the `UniVRse OS` project directory (`UniVRse-2.0/AGENTS.md` with relative symlinks `CLAUDE.md -> AGENTS.md` and `GEMINI.md -> AGENTS.md`) as well as the `/Users/brendonang/Desktop/UniVRse workflow` workspace root.
 >
-> **Repo Domain Reference Preserved**: Repository-specific runtime rules, Hani/Hermes bridge constraints, Stark 1 Lock Sync rules, and SLA floors live in [`./UniVRse-2.0/CLAUDE.md`](./UniVRse-2.0/CLAUDE.md) (**Jarvis Operating Manual**) and MUST be honored alongside this delivery workflow.
+> **Repo Domain Reference Preserved**: The original `UniVRse-2.0/CLAUDE.md` (**Jarvis Operating Manual with Stark 1 Lock Sync**) is preserved in `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` inside the `UniVRse OS` repository ([`./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md`](./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md) from workspace root) so Claude Code, OpenAI Codex, and Antigravity CLI all inherit the exact same canonical `AGENTS.md` without overriding each other.
 
 ---
 
-## 1. Workspace Scope, Cross-Tool Compatibility & Domain Locks
+## 1. Workspace Scope, Cross-Tool Standardization, Team Roles & Domain Locks
 
 ### 1.1 Workspace & Primary Repository Layout
 - **Workspace Root**: `/Users/brendonang/Desktop/UniVRse workflow`
-- **Primary Repository**: `/Users/brendonang/Desktop/UniVRse workflow/UniVRse-2.0`
+- **Primary Repository (`UniVRse OS`)**: `/Users/brendonang/Desktop/UniVRse workflow/UniVRse-2.0`
   - **Git Remote (`origin`)**: `https://github.com/UniVRse-Interactive/UniVRse-OS.git`
   - **Production Branch Note**: `origin/master` is currently the repository's production branch (`origin/HEAD -> origin/master`). The `staging` branch must be bootstrapped from `origin/master` (or `origin/main` once renamed) per Stage 2 before opening feature PRs.
 - **Issue Tracking Policy**: **GitHub Issues ONLY** (`gh issue` CLI and GitHub MCP) on `UniVRse-Interactive/UniVRse-OS`. **No external issue trackers** exist in `UniVRse workflow`; all new features open under Milestone **`Feature Request`** using `.github/ISSUE_TEMPLATE/feature_request.yml`.
@@ -19,9 +19,12 @@
 /Users/brendonang/Desktop/UniVRse workflow/
 ├── AGENTS.md                        # Canonical cross-harness 8-stage delivery spec
 ├── CLAUDE.md -> AGENTS.md           # Relative symlink for Claude Code
-├── GEMINI.md -> AGENTS.md           # Relative symlink for Google Antigravity / Gemini CLI
+├── GEMINI.md -> AGENTS.md           # Relative symlink for Antigravity CLI
+├── package.json                     # NPM CLI package manifest (npm run setup / npx)
+├── bin/
+│   └── cli.mjs                      # Interactive NPM CLI setup (Coding Agent, Role, UniVRse OS path)
 ├── README.md                        # Workflow overview & installation guide
-├── install.sh                       # Portable workspace installer & updater
+├── install.sh                       # Portable shell workspace installer & updater
 ├── univrse-workflow-diagram.png     # Visual 8-Stage Delivery Pipeline diagram
 ├── .gitignore                       # Ignores nested repos (UniVRse-2.0/), worktrees/, .env*
 ├── .mcp.json                        # Unified workspace MCP server definitions (slack, supabase)
@@ -31,8 +34,12 @@
 │   └── ISSUE_TEMPLATE/
 │       ├── config.yml               # Disables blank issues; links workflow docs
 │       └── feature_request.yml      # Standardized Feature Request form (Milestone + PM Review)
-└── UniVRse-2.0/                     # Primary repo (UniVRse-Interactive/UniVRse-OS.git)
-    ├── CLAUDE.md                    # PRESERVED: Jarvis Operating Manual & Stark 1 Lock Sync
+└── UniVRse-2.0/                     # Primary UniVRse OS repo (UniVRse-Interactive/UniVRse-OS.git)
+    ├── AGENTS.md                    # Canonical workflow spec inside UniVRse OS project directory
+    ├── CLAUDE.md -> AGENTS.md       # Relative symlink for Claude Code (standardized on AGENTS.md)
+    ├── GEMINI.md -> AGENTS.md       # Relative symlink for Antigravity CLI (standardized on AGENTS.md)
+    ├── docs/
+    │   └── UNIVRSE_OS_DOMAIN_MANUAL.md  # PRESERVED: Original Jarvis Operating Manual & Stark 1 Lock Sync
     ├── .env.example                 # Canonical list of environment keys (secrets in .env)
     ├── .gitignore                   # Must include worktrees/ (never commit worktrees or .env)
     ├── .github/ISSUE_TEMPLATE/      # Synced Feature Request Issue form & config
@@ -43,17 +50,19 @@
     └── worktrees/                   # Gitignored isolated local worktrees (<type>-issue-<num>-<slug>)
 ```
 
-### 1.2 Cross-Tool Compatibility (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`)
-All three AI coding tools share this single canonical workflow specification through workspace root symlinks:
+### 1.2 Standardized `AGENTS.md` Single-Source-of-Truth Rule
+- **All coding agents (`Claude Code`, `OpenAI Codex`, and `Antigravity CLI`) are standardized directly on `AGENTS.md`** inside the `UniVRse OS` project directory: `UniVRse-2.0/AGENTS.md` is the canonical file, with relative symlinks `CLAUDE.md -> AGENTS.md` and `GEMINI.md -> AGENTS.md` inside `UniVRse-2.0/` (mirrored identically at the workspace root).
+- **Domain Manual Preservation (Zero Overrides)**: The original `UniVRse-2.0/CLAUDE.md` (**Jarvis Operating Manual with Stark 1 Lock Sync**) is preserved in `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` inside the `UniVRse OS` repo (`./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md` from workspace root). Replacing the standalone `UniVRse-2.0/CLAUDE.md` with the symlink `CLAUDE.md -> AGENTS.md` ensures Claude Code, OpenAI Codex, and Antigravity CLI all inherit the exact same canonical `AGENTS.md` without overriding each other.
+- **Strictly Single-Workflow Execution**: All three tools execute this single, unified 8-stage delivery pipeline directly, with no multi-agent delegation tiers or model-routing hierarchies.
 
-| Tool / Harness | Files Loaded Automatically | Resolution Behavior |
+| Coding Agent / Harness | Files Loaded Inside `UniVRse OS` (`UniVRse-2.0/`) | Resolution Behavior |
 | :--- | :--- | :--- |
-| **OpenAI Codex** | `AGENTS.md` (workspace root) | Loads this canonical 8-stage delivery pipeline directly; respects `./UniVRse-2.0/CLAUDE.md` when operating inside `UniVRse-2.0/`. |
-| **Claude Code** | `CLAUDE.md` (`-> AGENTS.md`) + `UniVRse-2.0/CLAUDE.md` | Root `CLAUDE.md` symlink loads this canonical 8-stage delivery pipeline; `UniVRse-2.0/CLAUDE.md` appends repo-level domain locks. |
-| **Google Antigravity / Gemini CLI** | `GEMINI.md` (`-> AGENTS.md`) + `AGENTS.md` | Both resolve to this single canonical file so identical pipeline rules, checkpoints, and domain locks apply across tools. |
+| **Claude Code** | `CLAUDE.md` (`-> AGENTS.md`) | Resolves directly to canonical `AGENTS.md`; consults `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` for runtime domain locks without overriding other harnesses. |
+| **OpenAI Codex** | `AGENTS.md` | Loads canonical `AGENTS.md` directly; consults `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` for runtime domain locks. |
+| **Antigravity CLI** | `GEMINI.md` (`-> AGENTS.md`) + `AGENTS.md` | Resolves directly to canonical `AGENTS.md`; identical pipeline stages, checkpoints, and `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` locks apply. |
 
-### 1.3 Repo-Level Domain Reference (`./UniVRse-2.0/CLAUDE.md`)
-Whenever working inside `UniVRse-2.0/`, tools MUST read and preserve [`./UniVRse-2.0/CLAUDE.md`](./UniVRse-2.0/CLAUDE.md) (**Jarvis Operating Manual with Stark 1 Lock Sync**). Do not overwrite or bypass these domain locks:
+### 1.3 Repo-Level Domain Reference (`./docs/UNIVRSE_OS_DOMAIN_MANUAL.md`)
+Whenever working inside `UniVRse-2.0/` (`UniVRse OS`), all coding agents MUST read and preserve [`./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md`](./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md) (`./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` from the `UniVRse OS` repository root), which preserves the original `UniVRse-2.0/CLAUDE.md` (**Jarvis Operating Manual with Stark 1 Lock Sync**). Do not overwrite or bypass these domain locks:
 
 1. **Four-Lane Architecture**:
    - **STARK** (Strategy / Race Director), **JARVIS** (n8n logic, Hani's brain, RAG thresholds, workflow architecture), **ULTRON** (VPS chassis `207.148.76.194` / Tailscale `100.81.157.49`, Docker, Supabase SQL, cron, service restarts), **HANI ALYSSA** (runtime agent), and **HEZRI** (Team Principal / final decision maker).
@@ -71,8 +80,35 @@ Whenever working inside `UniVRse-2.0/`, tools MUST read and preserve [`./UniVRse
    - **ALL automated and manual internal smoke tests MUST use test phone `60000000001` exclusively.**
    - **Production line `60187777876` is strictly BANNED from any internal or automated test** (pollutes `sd.pendingHerHaniEmail` and `herhani_memory.json`).
 6. **Precedence Rule**:
-   - This root `AGENTS.md` governs the **End-to-End 8-Stage GitHub Issue -> Git Worktree -> `staging` -> `main` (`master`)** delivery pipeline across Claude Code, OpenAI Codex, and Google Antigravity (superseding raw direct pushes to `master`).
-   - `./UniVRse-2.0/CLAUDE.md` governs all UniVRse runtime architecture, Hani/Hermes bridge behavior, thresholds, SLA floors, and smoke-test safety locks.
+   - Canonical `AGENTS.md` (loaded identically via `AGENTS.md`, `CLAUDE.md -> AGENTS.md`, and `GEMINI.md -> AGENTS.md` inside both the workspace root and `UniVRse-2.0/`) governs the **End-to-End 8-Stage GitHub Issue -> Git Worktree -> `staging` -> `main` (`master`)** delivery pipeline across Claude Code, OpenAI Codex, and Antigravity CLI (superseding raw direct pushes to `master`).
+   - `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` (`./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md` from workspace root) governs all UniVRse runtime architecture, Hani/Hermes bridge behavior, thresholds, SLA floors, and smoke-test safety locks.
+
+### 1.4 UniVRse Team Roles & Stage Ownership Matrix
+During interactive NPM CLI setup (`bin/cli.mjs` / `npx` / `npm run setup`), each operator selects their team role (**Hezri**, **Asyraaf**, or **Brendon**) alongside their coding agent and `UniVRse OS` project path. Every stage in the 8-stage delivery pipeline has explicit human ownership:
+
+| Team Member | Role Title | Owned Pipeline Stages | Core Responsibilities & Gate Authority |
+| :--- | :--- | :--- | :--- |
+| **Hezri** | **Project Owner** | **Stage 1** (Intake & PM Gate), **Stage 7** (Staging Sign-Off), **Stage 8** (Release Approval & Closure) | Opens & triages Feature Requests under Milestone **`Feature Request`**; validates business value, User Story, Gherkin ACs, and Story Points `<= 8` (`status:pm-review` -> `status:pm-approved`) + gives User Confirmation; issues **`[PM APPROVED FOR MAIN]`** after Stage 7; grants Stage 8 final release approval (`staging -> main`/`master`) and confirms issue closure. |
+| **Asyraaf** | **Frontend and Backend Engineer** | **Stage 2** (Worktree), **Stage 3** (`.env` Parity), **Stage 4** (Implementation & Self-Test), **Stage 5** (Local QA), **Stage 6** (PR & Merge Request to `staging`) | Picks up `status:pm-approved` / `status:in-progress` GitHub Issues; creates isolated local git worktrees off `origin/staging`; runs `.env` vs `.env.example` parity checks; builds & self-tests Frontend (dashboard UI) and Backend (Python Hermes bridge, `tools/`, scripts, Supabase queries) strictly inside the worktree; runs Stage 5 Local QA Verification and submits Stage 6 `Refs #<Issue>` / `Closes #<Issue>` PRs to `staging`. |
+| **Brendon** | **Cloud Architect and DevOps Engineer** | **Stage 1** (`Allowed Paths` Architecture), **Stage 3/4/6** (Infra & Lane Guardrails), **Stage 6/7** (PR Review & Staging Verification), **Stage 8** (Release Execution & Cleanup) | Defines Stage 1 technical scope & `Allowed Paths` contracts once Hezri approves; owns CI/CD, Docker, Cloud Infra, VPS/Tailscale, Supabase, and N8N Lane Separation guardrails (`n8n.univrse.io:5678` staging vs `n8n-prod.univrse.io:5679` prod); reviews Stage 6 PRs & infra changes (`staging`); verifies Stage 7 Staging CI & live staging health (`60000000001` smoke lock); executes Stage 8 approved `staging -> main` releases & worktree cleanup. |
+
+#### Role Ownership Checklist
+
+- **Hezri (`Project Owner`)**:
+  - [ ] Opens and triages Feature Requests under the **`Feature Request`** Milestone (`.github/ISSUE_TEMPLATE/feature_request.yml`).
+  - [ ] Owns **Stage 1 PM Review Gate**: validates business value, User Story, Gherkin Acceptance Criteria, and Modified Fibonacci Story Points `<= 8`, transitions `status:pm-review` -> `status:pm-approved`, and gives User Confirmation before engineering starts.
+  - [ ] Owns **Stage 7 Staging Acceptance Sign-Off (`[PM APPROVED FOR MAIN]`)** after Staging CI and `60000000001` smoke tests pass.
+  - [ ] Owns **Stage 8 Final Release Approval** (`staging -> main` / `master`) and issue closure confirmation.
+- **Asyraaf (`Frontend and Backend Engineer`)**:
+  - [ ] Picks up `status:pm-approved` / `status:in-progress` GitHub Issues.
+  - [ ] Executes **Stage 2 Local Git Worktree creation** (`worktrees/<type>-issue-<num>-<slug>` on `<type>/issue-<num>-<slug>` off `origin/staging`).
+  - [ ] Executes **Stage 3 `.env` vs `.env.example` parity check**.
+  - [ ] Executes **Stage 4 Isolated Frontend & Backend Implementation & Local Self-Testing** (dashboard UI, Python Hermes bridge, tools, scripts, Supabase queries) strictly inside the worktree.
+  - [ ] Completes **Stage 5 Local QA Verification** and **Stage 6 Requesting PR & Merge to `staging`** (`Refs #<Issue>` / `Closes #<Issue>`).
+- **Brendon (`Cloud Architect and DevOps Engineer`)**:
+  - [ ] Defines **Stage 1 Technical Scope & `Allowed Paths` Architecture Contracts** once Hezri approves.
+  - [ ] Owns **Stage 3/4/6 CI/CD, Docker, Cloud Infra, VPS/Tailscale, Supabase & N8N Lane Separation Guardrails** (`n8n.univrse.io:5678` staging vs `n8n-prod.univrse.io:5679` prod).
+  - [ ] Reviews **Stage 6 PRs & Infra Changes (`staging`)**, verifies **Stage 7 Staging CI & Live Staging Health (`60000000001` Smoke Lock)**, and executes **Stage 8 Approved `staging -> main` Releases & Worktree Cleanup**.
 
 ---
 
@@ -340,14 +376,41 @@ Execute a complete local verification pass inside `worktrees/<type>-issue-<num>-
 - **Protected-Branch & Worktree Isolation**: Never edit or commit directly on `main`, `master`, or `staging`; always isolate changes in `worktrees/<type>-issue-<num>-<slug>`. Never execute destructive git commands (`git branch -D`, force pushes, `git worktree remove --force`) without explicit user approval.
 - **No Unapproved Production Mutations**: Never deploy directly to `n8n-prod.univrse.io` (port `5679`), modify `/etc/nginx/sites-available/n8n*` without written directive from Stark AND Hezri, or run `60187777876` in tests; staging (`https://n8n.univrse.io`, port `5678`) + `60000000001` is mandatory prior to Stage 8 approval.
 - **Strict User Checkpoints**: Always pause for explicit user confirmation at (1) Stage 1 PM Review Gate (`status:pm-approved`) before locking `Allowed Paths` and creating a worktree, (2) remote `staging` bootstrap when `origin/staging` does not exist yet, (3) Stage 6 User Checkpoint #1 before pushing/merging to `staging`, and (4) Stage 8 User Checkpoint #2 before merging `staging` into `main` (`master`).
-- **Documentation & Comment Integrity**: Preserve all unrelated comments, docstrings, and domain records inside `./UniVRse-2.0/CLAUDE.md`.
+- **Documentation & Comment Integrity**: Preserve all unrelated comments, docstrings, and domain records inside `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` (`./UniVRse-2.0/docs/UNIVRSE_OS_DOMAIN_MANUAL.md` from workspace root).
 - **Evidence-First Reporting**: Only claim file paths, symbol names, test runs, or verification passes that were directly observed after the final edit.
 
 ---
 
-## 4. Portable Installation & Destination Setup (`install.sh`)
+## 4. NPM CLI Installation & Setup (`npx` / `npm run setup` / `install.sh`)
 
-This workflow is packaged at `UniVRse-Interactive/UniVRse-workflow` and can be installed or updated into any destination folder via [`install.sh`](./install.sh):
+This workflow is packaged at `UniVRse-Interactive/UniVRse-workflow` and supports both an interactive **NPM CLI installer** (`bin/cli.mjs`) and the portable **shell installer** ([`install.sh`](./install.sh)):
+
+### 4.1 Interactive NPM CLI Setup (`npx` / `npm run setup`)
+Run the interactive setup wizard directly via `npx` or from a local checkout via `npm run setup`:
+
+```bash
+# Direct one-command interactive setup via npx (no global install needed)
+npx github:UniVRse-Interactive/UniVRse-workflow
+
+# Or from a local UniVRse-workflow clone
+npm run setup
+```
+
+The interactive CLI (`bin/cli.mjs`) prints setup instructions and guides you through three prompts:
+1. **Select Coding Agent**: `Claude Code`, `OpenAI Codex`, `Antigravity CLI`, or `All`.
+2. **Select Team Role**:
+   - `Hezri` (`Project Owner`)
+   - `Asyraaf` (`Frontend and Backend Engineer`)
+   - `Brendon` (`Cloud Architect and DevOps Engineer`)
+3. **Select Project Location (`UniVRse OS`)**: target `UniVRse OS` repository path (e.g., `./UniVRse-2.0` or custom project path).
+
+Upon completion, the CLI standardizes the target `UniVRse OS` project directory directly on `AGENTS.md`:
+- Preserves any existing `CLAUDE.md` (**Jarvis Operating Manual with Stark 1 Lock Sync**) into `./docs/UNIVRSE_OS_DOMAIN_MANUAL.md` inside the `UniVRse OS` project directory.
+- Installs canonical `AGENTS.md` and creates relative symlinks **`CLAUDE.md -> AGENTS.md`** and **`GEMINI.md -> AGENTS.md`** inside that project directory so Claude Code, OpenAI Codex, and Antigravity CLI share one unified workflow without overriding each other.
+- Syncs `.github/ISSUE_TEMPLATE/` (`feature_request.yml`, `config.yml`) and ensures `worktrees/` is present in `.gitignore`.
+
+### 4.2 Portable Shell Installer (`install.sh`)
+For non-interactive or scripted destination setups, use [`install.sh`](./install.sh):
 
 - **Install or update into a target folder** (creates `CLAUDE.md -> AGENTS.md` and `GEMINI.md -> AGENTS.md` symlinks, copies `AGENTS.md`, `README.md`, `install.sh`, `.gitignore`, `.mcp.json`, `.agents/`, and `.github/`, and ensures `worktrees/` is present in nested repository `.gitignore` files with `.github/ISSUE_TEMPLATE/` synced):
   ```bash
@@ -357,4 +420,4 @@ This workflow is packaged at `UniVRse-Interactive/UniVRse-workflow` and can be i
   ```bash
   bash <(gh api repos/UniVRse-Interactive/UniVRse-workflow/contents/install.sh -H "Accept: application/vnd.github.raw") --dest "/path/to/your/folder" --with-repo
   ```
-- See [`README.md`](./README.md) for all installation options (remote `gh`, local clone, direct clone, and `curl`).
+- See [`README.md`](./README.md) for all installation options (`npx`, `npm run setup`, remote `gh`, local clone, direct clone, and `curl`).
