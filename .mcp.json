@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "slack": {
+      "args": [
+        "https://mcp.slack.com/mcp",
+        "3118",
+        "--callback-path",
+        "/callback",
+        "--static-oauth-client-info",
+        "{\"client_id\":\"1601185624273.8899143856786\"}"
+      ],
+      "command": "/opt/homebrew/bin/mcp-remote",
+      "disabled": false,
+      "env": {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+      }
+    },
+    "supabase": {
+      "args": [
+        "https://mcp.supabase.com/mcp"
+      ],
+      "command": "/opt/homebrew/bin/mcp-remote",
+      "disabled": false,
+      "env": {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+      }
+    }
+  }
+}

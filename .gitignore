@@ -1,0 +1,11 @@
+# Nested project repositories & worktrees
+UniVRse-2.0/
+worktrees/
+
+# Secrets & local env
+.env
+.env.*
+!.env.example
+
+# OS / Editor
+.DS_Store
